@@ -8,9 +8,8 @@ import {
   Delete,
 } from "@nestjs/common"
 import { TasksService } from "./tasks.service"
-import { Task } from "./tasks.model"
+import { Task, TaskStatus } from "./tasks.model"
 import { CreateTaskDto } from "./dto/create-task.dto"
-import { UpdateTaskDto } from "./dto/update-task.dto"
 
 @Controller("tasks")
 export class TasksController {
@@ -31,12 +30,12 @@ export class TasksController {
     return this.tasksService.createTask(createTaskDto)
   }
 
-  @Patch(":id")
+  @Patch(":id/status")
   updateTask(
     @Param("id") id: string,
-    @Body() updateTaskDto: UpdateTaskDto,
+    @Body("status") status: TaskStatus,
   ): Task {
-    return this.tasksService.updateTask(id, updateTaskDto)
+    return this.tasksService.updateTask(id, status)
   }
 
   @Delete(":id")
