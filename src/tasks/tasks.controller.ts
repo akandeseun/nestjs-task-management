@@ -21,6 +21,7 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Get()
+  @UsePipes(ValidationPipe)
   getAllTasks(@Query() filterDto: GetTaskFilterDto): Task[] {
     if (Object.keys(filterDto).length) {
       return this.tasksService.getTasksWithFilters(filterDto)
@@ -34,7 +35,7 @@ export class TasksController {
   }
 
   @Post()
-  @UsePipes(new ValidationPipe())
+  @UsePipes(ValidationPipe)
   createTask(@Body() createTaskDto: CreateTaskDto) {
     return this.tasksService.createTask(createTaskDto)
   }
