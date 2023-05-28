@@ -10,6 +10,7 @@ import {
   UsePipes,
   ValidationPipe,
   ParseIntPipe,
+  HttpCode,
 } from "@nestjs/common"
 import { TasksService } from "./tasks.service"
 import { CreateTaskDto } from "./dto/create-task.dto"
@@ -47,6 +48,7 @@ export class TasksController {
   }
 
   @Delete(":id")
+  @HttpCode(201)
   deleteTask(@Param("id", ParseIntPipe) id: number): Promise<void> {
     return this.tasksService.deleteTask(id)
   }
