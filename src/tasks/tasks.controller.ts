@@ -22,14 +22,10 @@ import { TaskStatus } from "./task-status.enum"
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  // @Get()
-  // @UsePipes(ValidationPipe)
-  // getAllTasks(@Query() filterDto: GetTaskFilterDto): Task[] {
-  //   if (Object.keys(filterDto).length) {
-  //     return this.tasksService.getTasksWithFilters(filterDto)
-  //   }
-  //   return this.tasksService.getAllTasks()
-  // }
+  @Get()
+  getTasks(@Query() filterDto: GetTaskFilterDto): Promise<Task[]> {
+    return this.tasksService.getTasks(filterDto)
+  }
 
   @Get(":id")
   getTaskById(@Param("id", ParseIntPipe) id: number): Promise<Task> {
