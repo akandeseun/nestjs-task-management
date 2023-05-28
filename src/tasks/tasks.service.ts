@@ -50,18 +50,13 @@ export class TasksService {
       throw new NotFoundException(`Task with ID ${id} not found`)
     }
   }
-  // updateTask(id: string, status: TaskStatus): Task {
-  //   const task = this.getTaskById(id)
-  //   task.status = status
-  //   return task
-  // }
-  // deleteTask(id: string): Task[] {
-  //   const task = this.getTaskById(id)
-  //   const taskIndex = this.tasks.indexOf(task)
-  //   return this.tasks.splice(taskIndex)
-  // }
-  // deleteTaskAlternative(id: string): void {
-  //   const found = this.getTaskById(id)
-  //   this.tasks = this.tasks.filter((task) => task.id !== found.id)
-  // }
+
+  async updateTaskStatus(id: number, status: TaskStatus): Promise<Task> {
+    const task = await this.getTaskById(id)
+
+    task.status = status
+    await task.save()
+
+    return task
+  }
 }
