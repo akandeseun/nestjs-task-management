@@ -4,6 +4,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  BadRequestException,
 } from "@nestjs/common"
 import { AuthCredentialsDto } from "./dto/auth-credentials.dto"
 import * as bcrypt from "@phc/bcrypt"
@@ -14,7 +15,7 @@ export class UserRepository extends Repository<User> {
     super(User, dataSource.createEntityManager())
   }
 
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<string> {
     const { username, password } = authCredentialsDto
 
     // const exists = this.findOneBy({ username })
@@ -29,6 +30,7 @@ export class UserRepository extends Repository<User> {
 
     try {
       await user.save()
+      return "Profile created"
     } catch (error) {
       if (error.code === "23505") {
         throw new ConflictException("Username already exists")
@@ -37,7 +39,30 @@ export class UserRepository extends Repository<User> {
     }
   }
 
+  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<string> {
+    const { username, password } = authCredentialsDto
+    const user = await User.findOneBy({ username })
+    if (!user) {
+      throw new BadRequestException("User not found")
+    }
+    try {
+      if (!(await this.verifyPassword(user.password, password))) {
+        throw new BadRequestException("incorrect password")
+      }
+      return user.username
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   private async hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password)
+  }
+
+  private async verifyPassword(
+    hash: string,
+    password: string,
+  ): Promise<boolean> {
+    return await bcrypt.verify(hash, password)
   }
 }
