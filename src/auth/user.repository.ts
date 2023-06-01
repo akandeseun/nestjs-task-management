@@ -43,11 +43,11 @@ export class UserRepository extends Repository<User> {
     const { username, password } = authCredentialsDto
     const user = await User.findOneBy({ username })
     if (!user) {
-      throw new BadRequestException("User not found")
+      throw new BadRequestException("Invalid username or password")
     }
     try {
       if (!(await this.verifyPassword(user.password, password))) {
-        throw new BadRequestException("incorrect password")
+        throw new BadRequestException("Invalid username or password")
       }
       return user.username
     } catch (error) {
