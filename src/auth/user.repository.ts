@@ -45,14 +45,14 @@ export class UserRepository extends Repository<User> {
     if (!user) {
       throw new BadRequestException("Invalid username or password")
     }
-    try {
-      if (!(await this.verifyPassword(user.password, password))) {
-        throw new BadRequestException("Invalid username or password")
-      }
-      return user.username
-    } catch (error) {
-      console.log(error)
+    // try {
+    if (!(await this.verifyPassword(user.password, password))) {
+      throw new BadRequestException("Invalid username or password")
     }
+    return user.username
+    // } catch (error) {
+    //   console.log(error)
+    // }
   }
 
   private async hashPassword(password: string): Promise<string> {
