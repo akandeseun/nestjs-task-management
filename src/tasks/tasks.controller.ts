@@ -47,8 +47,8 @@ export class TasksController {
   @Post()
   @UsePipes(ValidationPipe)
   createTask(
-    @GetUser() user: User,
     @Body() createTaskDto: CreateTaskDto,
+    @GetUser() user: User,
   ): Promise<Task> {
     return this.tasksService.createTask(createTaskDto, user)
   }
