@@ -15,29 +15,29 @@ export class UserRepository extends Repository<User> {
     super(User, dataSource.createEntityManager())
   }
 
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<string> {
-    const { username, password } = authCredentialsDto
+  // async signUp(authCredentialsDto: AuthCredentialsDto): Promise<string> {
+  //   const { username, password } = authCredentialsDto
 
-    // const exists = this.findOneBy({ username })
-    // if (exists) {
-    //   throw new BadRequestException()
-    // }
+  //   // const exists = this.findOneBy({ username })
+  //   // if (exists) {
+  //   //   throw new BadRequestException()
+  //   // }
 
-    const user = new User()
-    user.username = username
-    user.password = await this.hashPassword(password)
-    console.log(user.password)
+  //   const user = new User()
+  //   user.username = username
+  //   user.password = await this.hashPassword(password)
+  //   // console.log(user.password)
 
-    try {
-      await user.save()
-      return "Profile created"
-    } catch (error) {
-      if (error.code === "23505") {
-        throw new ConflictException("Username already exists")
-      }
-      throw new InternalServerErrorException("Something went wrong")
-    }
-  }
+  //   try {
+  //     await user.save()
+  //     return "Profile created"
+  //   } catch (error) {
+  //     if (error.code === "23505") {
+  //       throw new ConflictException("Username already exists")
+  //     }
+  //     throw new InternalServerErrorException("Something went wrong")
+  //   }
+  // }
 
   async signIn(authCredentialsDto: AuthCredentialsDto): Promise<string> {
     const { username, password } = authCredentialsDto
@@ -55,7 +55,7 @@ export class UserRepository extends Repository<User> {
     // }
   }
 
-  private async hashPassword(password: string): Promise<string> {
+  async hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password)
   }
 

@@ -1,9 +1,15 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common"
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { JwtService } from "@nestjs/jwt"
 import { UserRepository } from "./user.repository"
 import { AuthCredentialsDto } from "./dto/auth-credentials.dto"
 import { JwtPayload } from "./jwt-payload.interface"
+import { User } from "./user.entity"
 
 @Injectable()
 export class AuthService {
@@ -13,7 +19,22 @@ export class AuthService {
   ) {}
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<string> {
-    return this.userRepository.signUp(authCredentialsDto)
+    const { username, password } = authCredentialsDto
+
+    const user = new User()
+    user.username = username
+    user.password = await this.userRepository.hashPassword(password)
+
+    try {
+      await user.save()
+      return "Profile Created"
+    } catch (error) {
+      if (error.code === "23505") {
+        throw new ConflictException("Username already exists")
+      }
+      throw new InternalServerErrorException("Something went wrong")
+    }
+    // return this.userRepository.signUp(authCredentialsDto)
   }
 
   async signIn(authCredentialsDto: AuthCredentialsDto): Promise<object> {
