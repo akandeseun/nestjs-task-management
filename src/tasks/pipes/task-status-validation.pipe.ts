@@ -1,4 +1,4 @@
-import { PipeTransform, HttpException, HttpStatus } from "@nestjs/common"
+import { PipeTransform, BadRequestException } from "@nestjs/common"
 import { TaskStatus } from "../task-status.enum"
 
 export class TaskStatusValidationPipe implements PipeTransform {
@@ -12,11 +12,11 @@ export class TaskStatusValidationPipe implements PipeTransform {
     value = value.toUpperCase()
 
     if (!this.isStatusValid(value)) {
-      throw new HttpException(
-        `${value} is an invalid status`,
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      )
-      // throw new BadRequestException(`"${value}" is an invalid status`)
+      // throw new HttpException(
+      //   `${value} is an invalid status`,
+      //   HttpStatus.UNPROCESSABLE_ENTITY,
+      // )
+      throw new BadRequestException(`"${value}" is an invalid status`)
     }
     return value
   }
