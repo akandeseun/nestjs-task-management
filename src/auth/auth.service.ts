@@ -10,6 +10,7 @@ import { UserRepository } from "./user.repository"
 import { AuthCredentialsDto } from "./dto/auth-credentials.dto"
 import { JwtPayload } from "./jwt-payload.interface"
 import { User } from "./user.entity"
+import { AuthSignIn } from "./dto/auth-signin.dto"
 
 @Injectable()
 export class AuthService {
@@ -37,8 +38,8 @@ export class AuthService {
     // return this.userRepository.signUp(authCredentialsDto)
   }
 
-  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<object> {
-    const { username, password } = authCredentialsDto
+  async signIn(authSignIn: AuthSignIn): Promise<object> {
+    const { username, password } = authSignIn
     const user = await User.findOneBy({ username })
 
     if (!user) {
