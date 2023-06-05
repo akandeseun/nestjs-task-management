@@ -39,30 +39,27 @@ export class UserRepository extends Repository<User> {
   //   }
   // }
 
-  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<string> {
-    const { username, password } = authCredentialsDto
-    const user = await User.findOneBy({ username })
-    if (!user) {
-      throw new BadRequestException("Invalid username or password")
-    }
-    // try {
-    if (!(await this.verifyPassword(user.password, password))) {
-      throw new BadRequestException("Invalid username or password")
-    }
-    return user.username
-    // } catch (error) {
-    //   console.log(error)
-    // }
-  }
+  // async signIn(authCredentialsDto: AuthCredentialsDto): Promise<string> {
+  //   const { username, password } = authCredentialsDto
+  //   const user = await User.findOneBy({ username })
+  //   if (!user) {
+  //     throw new BadRequestException("Invalid username or password")
+  //   }
+  //   // try {
+  //   if (!(await this.verifyPassword(user.password, password))) {
+  //     throw new BadRequestException("Invalid username or password")
+  //   }
+  //   return user.username
+  //   // } catch (error) {
+  //   //   console.log(error)
+  //   // }
+  // }
 
   async hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password)
   }
 
-  private async verifyPassword(
-    hash: string,
-    password: string,
-  ): Promise<boolean> {
+  async verifyPassword(hash: string, password: string): Promise<boolean> {
     return await bcrypt.verify(hash, password)
   }
 }

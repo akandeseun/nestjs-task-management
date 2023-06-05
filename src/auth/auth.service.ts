@@ -1,8 +1,8 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
-  UnauthorizedException,
 } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { JwtService } from "@nestjs/jwt"
@@ -38,10 +38,20 @@ export class AuthService {
   }
 
   async signIn(authCredentialsDto: AuthCredentialsDto): Promise<object> {
-    const username = await this.userRepository.signIn(authCredentialsDto)
+    const { username, password } = authCredentialsDto
+    const user = await User.findOneBy({ username })
 
-    if (!username) {
-      throw new UnauthorizedException("Invalid Credentials")
+    if (!user) {
+      throw new BadRequestException("Invalid username or password")
+    }
+
+    const verifiedUser = await this.userRepository.verifyPassword(
+      user.password,
+      password,
+    )
+
+    if (!verifiedUser) {
+      throw new BadRequestException("Invalid username or password")
     }
 
     const payload: JwtPayload = { username }
