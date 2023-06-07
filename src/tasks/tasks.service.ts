@@ -70,4 +70,12 @@ export class TasksService {
 
     return task
   }
+
+  async createTaskWithImage(
+    createTaskDto: CreateTaskDto,
+    user: User,
+    file: Express.Multer.File,
+  ): Promise<Task> {
+    return this.taskRepository.createTaskWithImage(createTaskDto, user, file)
+  }
 }

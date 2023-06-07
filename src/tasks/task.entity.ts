@@ -27,4 +27,7 @@ export class Task extends BaseEntity {
 
   @Column()
   userId: number
+
+  @Column({ type: "bytea" })
+  taskImage: any
 }

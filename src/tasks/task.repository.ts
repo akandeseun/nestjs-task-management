@@ -47,4 +47,24 @@ export class TaskRepository extends Repository<Task> {
 
     return task
   }
+
+  async createTaskWithImage(
+    createTaskDto: CreateTaskDto,
+    user: User,
+    file: Express.Multer.File,
+  ): Promise<Task> {
+    const { title, description } = createTaskDto
+
+    const task = new Task()
+    task.title = title
+    task.description = description
+    task.status = TaskStatus.OPEN
+    task.user = user
+    task.taskImage = file
+    await task.save()
+
+    delete task.user
+
+    return task
+  }
 }
